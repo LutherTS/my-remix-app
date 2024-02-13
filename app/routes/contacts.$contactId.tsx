@@ -4,6 +4,7 @@ import { json } from "@remix-run/node";
 import {
   Form,
   // Outlet, // just to test something
+  Link,
   useLoaderData,
 } from "@remix-run/react";
 import type { FunctionComponent } from "react";
@@ -72,6 +73,11 @@ export default function Contact() {
           <Form action="edit">
             <button type="submit">Edit</button>
           </Form>
+          {/* Send to the path .../chocolat. 
+          So by default, action in Remix sends to a route. */}
+          {/* <Form action="chocolat">
+            <button type="submit">Chocolat</button>
+          </Form> */}
 
           <Form
             action="destroy"
@@ -87,6 +93,10 @@ export default function Contact() {
           >
             <button type="submit">Delete</button>
           </Form>
+
+          {/* Exactly. Without a / it links to .../destroying, 
+          and with a slash it links to (root)/destroying. */}
+          {/* <Link to={`destroying`}>Destroying</Link> */}
         </div>
       </div>
       {/* testing the default nested layout */}
