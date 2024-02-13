@@ -1,3 +1,18 @@
+:root {
+  --background-color: white;
+  --foreground-color: #121212;
+  --sidebar-color: #f7f7f7;
+}
+
+/* Now it works, I just need it tailored all around. */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #121212;
+    --foreground-color: white;
+    --sidebar-color: #171717;
+  }
+} */
+
 html {
   box-sizing: border-box;
 }
@@ -25,8 +40,10 @@ body {
   height: 100%;
   margin: 0;
   line-height: 1.5;
-  color: #121212;
+  background-color: var(--background-color);
+  color: var(--foreground-color);
 }
+
 textarea,
 input,
 button {
@@ -40,9 +57,12 @@ button {
   line-height: 1.5;
   margin: 0;
 }
+
 button {
   color: #3992ff;
   font-weight: 500;
+  /* Added to make it feel like a button */
+  cursor: pointer;
 }
 
 textarea:hover,
@@ -61,20 +81,24 @@ button:active {
   align-items: flex-start;
   gap: 1rem;
 }
+
 #contact h1 form {
   display: flex;
   align-items: center;
   margin-top: 0.25rem;
 }
+
 #contact h1 form button {
   box-shadow: none;
   font-size: 1.5rem;
   font-weight: 400;
   padding: 0;
 }
+
 #contact h1 form button[value="true"] {
   color: #a4a4a4;
 }
+
 #contact h1 form button[value="true"]:hover,
 #contact h1 form button[value="false"] {
   color: #eeb004;
@@ -104,7 +128,7 @@ body {
 
 #sidebar {
   width: 22rem;
-  background-color: #f7f7f7;
+  background-color: var(--sidebar-color);
   border-right: solid 1px #e3e3e3;
   display: flex;
   flex-direction: column;
@@ -191,6 +215,7 @@ body {
   float: right;
   color: #eeb004;
 }
+
 #sidebar nav a.active span {
   color: inherit;
 }
@@ -198,6 +223,7 @@ body {
 i {
   color: #818181;
 }
+
 #sidebar nav .active i {
   color: inherit;
 }
@@ -296,6 +322,7 @@ i {
   color: #3992ff;
   text-decoration: none;
 }
+
 #contact a[href*="twitter"]:hover {
   text-decoration: underline;
 }
@@ -321,21 +348,26 @@ i {
   flex-direction: column;
   gap: 1rem;
 }
+
 #contact-form > p:first-child {
   margin: 0;
   padding: 0;
 }
+
 #contact-form > p:first-child > :nth-child(2) {
   margin-right: 1rem;
 }
+
 #contact-form > p:first-child,
 #contact-form label {
   display: flex;
 }
+
 #contact-form p:first-child span,
 #contact-form label span {
   width: 8rem;
 }
+
 #contact-form p:first-child input,
 #contact-form label input,
 #contact-form label textarea {

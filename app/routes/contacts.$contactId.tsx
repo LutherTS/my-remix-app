@@ -1,7 +1,11 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import { json } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import {
+  Form,
+  // Outlet, // just to test something
+  useLoaderData,
+} from "@remix-run/react";
 import type { FunctionComponent } from "react";
 
 import type { ContactRecord } from "../data";
@@ -85,6 +89,9 @@ export default function Contact() {
           </Form>
         </div>
       </div>
+      {/* testing the default nested layout */}
+      {/* Exactly. Without _ edit gets nested here. */}
+      {/* <Outlet /> */}
     </div>
   );
 }
