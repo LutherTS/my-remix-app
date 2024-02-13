@@ -2,16 +2,18 @@
   --background-color: white;
   --foreground-color: #121212;
   --sidebar-color: #f7f7f7;
+  --sidebar-context-color: #e3e3e3;
 }
 
 /* Now it works, I just need it tailored all around. */
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
     --background-color: #121212;
     --foreground-color: white;
     --sidebar-color: #171717;
+    --sidebar-context-color: #030303;
   }
-} */
+}
 
 html {
   box-sizing: border-box;
@@ -56,6 +58,10 @@ button {
   background-color: white;
   line-height: 1.5;
   margin: 0;
+}
+
+.favorite {
+  background-color: var(--background-color);
 }
 
 button {
@@ -129,7 +135,7 @@ body {
 #sidebar {
   width: 22rem;
   background-color: var(--sidebar-color);
-  border-right: solid 1px #e3e3e3;
+  border-right: solid 1px var(--sidebar-context-color);
   display: flex;
   flex-direction: column;
 }
@@ -146,7 +152,7 @@ body {
   align-items: center;
   margin: 0;
   padding: 1rem 2rem;
-  border-top: 1px solid #e3e3e3;
+  border-top: 1px solid var(--sidebar-context-color);
   order: 1;
   line-height: 1;
 }
@@ -164,7 +170,7 @@ body {
   gap: 0.5rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e3e3e3;
+  border-bottom: 1px solid var(--sidebar-context-color);
 }
 
 #sidebar > div form {
@@ -254,7 +260,7 @@ i {
 }
 
 #sidebar nav a:hover {
-  background: #e3e3e3;
+  background: var(--sidebar-context-color);
 }
 
 #sidebar nav a.active {
@@ -269,13 +275,13 @@ i {
 
 @keyframes progress {
   0% {
-    background: #e3e3e3;
+    background: var(--sidebar-context-color);
   }
   50% {
     background: hsla(224, 98%, 58%, 0.5);
   }
   100% {
-    background: #e3e3e3;
+    background: var(--sidebar-context-color);
   }
 }
 
@@ -397,7 +403,8 @@ i {
 }
 
 #contact-form p:last-child button[type="button"] {
-  color: inherit;
+  /* color: inherit; */
+  color: #121212;
 }
 
 #index-page {

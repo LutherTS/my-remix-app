@@ -104,6 +104,8 @@ const Favorite: FunctionComponent<{
   return (
     <Form method="post">
       <button
+        // added for dark mode background
+        className="favorite"
         aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
         name="favorite"
         value={favorite ? "false" : "true"}
