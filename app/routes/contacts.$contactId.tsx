@@ -1,16 +1,34 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+/* Folders
+Routes can be put in folders without any routing issue as long as they're under the app/routes folder. It is therefore up to developers and organizations to define how they'll be organizing these routes among themselves.
+It's better than Next.js's App Router in the sense that you have control, but worse in the same sense that a Remix developer will have to learn new, team specific conventions instead of being able to just and understand any Next.js App Router project just by its framework folder conventions.
+*/
+
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import { json } from "@remix-run/node";
 import {
   Form,
+  useFetcher,
   // Outlet, // just to test something
+  // Link, // also to test something
   useLoaderData,
 } from "@remix-run/react";
-import type { FunctionComponent } from "react";
+// import type { FunctionComponent } from "react";
 
 import type { ContactRecord } from "../data";
 
-import { getContact } from "../data";
+import { getContact, updateContact } from "../data";
+
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+  invariant(params.contactId, "Missing contactId param");
+  const formData = await request.formData();
+  // console.log(request);
+  // console.log(formData);
+  // console.log(formData.get("favorite"));
+  return updateContact(params.contactId, {
+    favorite: formData.get("favorite") === "true", //  === "true" is to force a boolean so that it cannot be null
+  });
+};
 
 // export const loader = async ({ params }) => {
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -72,6 +90,11 @@ export default function Contact() {
           <Form action="edit">
             <button type="submit">Edit</button>
           </Form>
+          {/* Send to the path .../chocolat. 
+          So by default, action in Remix sends to a route. */}
+          {/* <Form action="chocolat">
+            <button type="submit">Chocolat</button>
+          </Form> */}
 
           <Form
             action="destroy"
@@ -87,6 +110,10 @@ export default function Contact() {
           >
             <button type="submit">Delete</button>
           </Form>
+
+          {/* Exactly. Without a / it links to .../destroying, 
+          and with a slash it links to (root)/destroying. */}
+          {/* <Link to={`destroying`}>Destroying</Link> */}
         </div>
       </div>
       {/* testing the default nested layout */}
@@ -96,13 +123,20 @@ export default function Contact() {
   );
 }
 
-const Favorite: FunctionComponent<{
-  contact: Pick<ContactRecord, "favorite">;
-}> = ({ contact }) => {
-  const favorite = contact.favorite;
+// const Favorite: FunctionComponent<{
+//   contact: Pick<ContactRecord, "favorite">;
+// }> = ({ contact }) => {
+
+function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
+  const fetcher = useFetcher();
+  // const favorite = contact.favorite;
+  const favorite = fetcher.formData
+    ? fetcher.formData.get("favorite") === "true"
+    : contact.favorite;
 
   return (
-    <Form method="post">
+    // kinda like Framer Motion's motion.div, etc.
+    <fetcher.Form method="post">
       <button
         // added for dark mode background
         className="favorite"
@@ -112,6 +146,6 @@ const Favorite: FunctionComponent<{
       >
         {favorite ? "★" : "☆"}
       </button>
-    </Form>
+    </fetcher.Form>
   );
-};
+}
