@@ -1,6 +1,6 @@
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 // 🛑 Nothing in here has anything to do with Remix, it's just a fake database
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 import { matchSorter } from "match-sorter";
 // @ts-expect-error - no types, but it's a tiny function
@@ -22,7 +22,7 @@ export type ContactRecord = ContactMutation & {
   createdAt: string;
 };
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 // This is just a fake DB table. In a real app you'd be talking to a real db or
 // fetching from an existing API.
 const fakeContacts = {
@@ -60,7 +60,7 @@ const fakeContacts = {
   },
 };
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 // Handful of helper functions to be called from route loaders and actions
 export async function getContacts(query?: string | null) {
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -160,7 +160,8 @@ export async function deleteContact(id: string) {
   {
     avatar:
       "https://sessionize.com/image/5578-400o400o2-BMT43t5kd2U1XstaNnM6Ax.jpg",
-    first: "Kent C.",
+    first: "Kent",
+    // C. is not a first name, so I'm removing it for a leaner slug.
     last: "Dodds",
     twitter: "@kentcdodds",
   },
