@@ -1,4 +1,4 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import {
   Form,
@@ -12,7 +12,9 @@ import {
   ScrollRestoration,
   useLoaderData,
   useNavigation,
+  useSubmit,
 } from "@remix-run/react";
+import { useEffect } from "react";
 
 import { createEmptyContact, getContacts } from "./data";
 
@@ -23,9 +25,16 @@ export const links: LinksFunction = () => [
 ];
 
 // Loader is a convention. Application breaks if you change it.
-export const loader = async () => {
-  const contacts = await getContacts();
-  return json({ contacts });
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  // Actually, here I would have filtered with a useState so that
+  // it doesn't remove the outlet while we're searching.
+  // Even if it's filtered through calls, here it would be best if
+  // the list was obtained via state so that the contact URL would
+  // remain the same.
+  const url = new URL(request.url);
+  const q = url.searchParams.get("q");
+  const contacts = await getContacts(q);
+  return json({ contacts, q });
 };
 
 // I'll assume that action is a convention as well
@@ -36,9 +45,22 @@ export const action = async () => {
 };
 
 export default function App() {
-  const { contacts } = useLoaderData<typeof loader>();
+  const { contacts, q } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
   // console.log(navigation.state); // goes loading-loading-idle
+  const submit = useSubmit();
+  const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has("q");
+  // console.log(navigation.location); // gets four times the same object then gets two undefined
+  // console.log(searching); // gets four times true then gets two undefined
+
+  useEffect(() => {
+    const searchField = document.getElementById("q");
+    if (searchField instanceof HTMLInputElement) {
+      searchField.value = q || "";
+    }
+  }, [q]);
 
   return (
     <html lang="en">
@@ -52,15 +74,32 @@ export default function App() {
         <div id="sidebar">
           <h1>Remix Contacts</h1>
           <div>
-            <Form id="search-form" role="search">
+            <Form
+              id="search-form"
+              // onChange={(event) =>
+              //   submit(event.currentTarget)}
+              onChange={(event) => {
+                const isFirstSearch = q === null;
+                // const isFirstSearch = !!q === false;
+                // console.log(isFirstSearch); // So far q becomes an empty string and therefore continues to remain true. Unlike in the Next.js tutorial where they make sure to remove the query param when it becomes an empty string.
+                // So here I could get this to be true when "" with a DOUBLE NOT. Exactly.
+                // But since it's to remove the searchParams, theirs is better.
+                submit(event.currentTarget, {
+                  replace: !isFirstSearch,
+                });
+              }}
+              role="search"
+            >
               <input
                 id="q"
                 aria-label="Search contacts"
+                className={searching ? "loading" : ""}
+                defaultValue={q || ""}
                 placeholder="Search"
                 type="search"
                 name="q"
               />
-              <div id="search-spinner" aria-hidden hidden={true} />
+              <div id="search-spinner" aria-hidden hidden={!searching} />
             </Form>
             <Form method="post">
               <button type="submit">New</button>
@@ -108,7 +147,9 @@ export default function App() {
           </nav>
         </div>
         <div
-          className={navigation.state === "loading" ? "loading" : ""}
+          className={
+            navigation.state === "loading" && !searching ? "loading" : ""
+          }
           id="detail"
         >
           <Outlet />

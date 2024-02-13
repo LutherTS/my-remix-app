@@ -1,17 +1,29 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import { json } from "@remix-run/node";
 import {
   Form,
+  useFetcher,
   // Outlet, // just to test something
-  Link,
+  // Link, // also to test something
   useLoaderData,
 } from "@remix-run/react";
-import type { FunctionComponent } from "react";
+// import type { FunctionComponent } from "react";
 
 import type { ContactRecord } from "../data";
 
-import { getContact } from "../data";
+import { getContact, updateContact } from "../data";
+
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+  invariant(params.contactId, "Missing contactId param");
+  const formData = await request.formData();
+  // console.log(request);
+  // console.log(formData);
+  // console.log(formData.get("favorite"));
+  return updateContact(params.contactId, {
+    favorite: formData.get("favorite") === "true", //  === "true" is to force a boolean so that it cannot be null
+  });
+};
 
 // export const loader = async ({ params }) => {
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -106,13 +118,20 @@ export default function Contact() {
   );
 }
 
-const Favorite: FunctionComponent<{
-  contact: Pick<ContactRecord, "favorite">;
-}> = ({ contact }) => {
-  const favorite = contact.favorite;
+// const Favorite: FunctionComponent<{
+//   contact: Pick<ContactRecord, "favorite">;
+// }> = ({ contact }) => {
+
+function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
+  const fetcher = useFetcher();
+  // const favorite = contact.favorite;
+  const favorite = fetcher.formData
+    ? fetcher.formData.get("favorite") === "true"
+    : contact.favorite;
 
   return (
-    <Form method="post">
+    // kinda like Framer Motion's motion.div, etc.
+    <fetcher.Form method="post">
       <button
         // added for dark mode background
         className="favorite"
@@ -122,6 +141,6 @@ const Favorite: FunctionComponent<{
       >
         {favorite ? "★" : "☆"}
       </button>
-    </Form>
+    </fetcher.Form>
   );
-};
+}
