@@ -20,6 +20,7 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: appStylesHref },
 ];
 
+// Loader is a convention. Application breaks if you change it.
 export const loader = async () => {
   const contacts = await getContacts();
   return json({ contacts });
