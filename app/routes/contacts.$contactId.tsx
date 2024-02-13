@@ -1,3 +1,8 @@
+/* Folders
+Routes can be put in folders without any routing issue as long as they're under the app/routes folder. It is therefore up to developers and organizations to define how they'll be organizing these routes among themselves.
+It's better than Next.js's App Router in the sense that you have control, but worse in the same sense that a Remix developer will have to learn new, team specific conventions instead of being able to just and understand any Next.js App Router project just by its framework folder conventions.
+*/
+
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import { json } from "@remix-run/node";
