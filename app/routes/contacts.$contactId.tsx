@@ -26,7 +26,8 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   // console.log(formData);
   // console.log(formData.get("favorite"));
   return updateContact(params.contactId, {
-    favorite: formData.get("favorite") === "true", //  === "true" is to force a boolean so that it cannot be null
+    favorite: Boolean(formData.get("favorite")),
+    // favorite: formData.get("favorite") === "true", //  === "true" is to force a boolean so that it cannot be null
   });
 };
 
